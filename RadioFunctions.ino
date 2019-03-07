@@ -5,7 +5,8 @@ void setupRadio()
 
 void checkRadio(void)
 {
-  while(radio.available())
+  char key = 'n';
+  while(key != 'C')
   {
     radio.println(F("Press 'C' to confirm DCAWS to Radio comms"));
     char key = (char)radio.read();

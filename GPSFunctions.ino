@@ -47,6 +47,10 @@ void checkGPS()
 
 void sendGPS()
 {
+  if(initGPS)
+    radio.println(F("First GPS"));
+  else
+    radio.println(F("not first GPS"));
   radio.println(F("The current GPS coordinates are "));
   radio.print(GPS.latitude,6);
   radio.print(F(", "));
@@ -59,11 +63,11 @@ void sendGPS()
 
 void logGPS()
 {
-  File DCAWS_GPS = SD.open("DCAWS_GPS.csv", FILE_WRITE);
-  DCAWS_GPS.print(avgLat,6);
-  DCAWS_GPS.print(", ");
-  DCAWS_GPS.println(avgLon,6);
-  DCAWS_GPS.close(); /////////////////////////////////////////////////maybe don't close, flush
+  File gpsfile = SD.open("gpsfile.csv", FILE_WRITE);
+  gpsfile.print(avgLat,6);
+  gpsfile.print(", ");
+  gpsfile.println(avgLon,6);
+  gpsfile.close(); /////////////////////////////////////////////////maybe don't close, flush
 }
 
 void mvavgGPS(double lat, double lon, boolean mvInit)

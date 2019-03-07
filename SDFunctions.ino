@@ -6,7 +6,7 @@ void setupSD()
   if (SD.begin(chipSelect))
   {
     radio.println("initialization successful!");
-    DCAWS_GPS = SD.open("DCAWS_GPS.csv", FILE_WRITE);
+    gpsfile = SD.open("gpsfile.csv", FILE_WRITE);
   }
   else
   {
@@ -17,15 +17,16 @@ void setupSD()
 
 void checkSD()
 {
-  if (!DCAWS_GPS)
+  if (!gpsfile)
   {
     radio.println(F("SD card failed!"));
  //   missionReady = false;
+    state = SAMPLE_MISSION;
     return;
   }
   radio.print(F("SD card initialization confirmed and found files: "));
                                     //  if (DCAWS_Depth)
                                     //radio.print(F("DCAWS_Depth, "));
-  if (DCAWS_GPS)
-    radio.println(F("DCAWS_GPS"));
+  if (gpsfile)
+    radio.println(F("gpsfile"));
 }

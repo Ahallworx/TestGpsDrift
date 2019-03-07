@@ -13,6 +13,7 @@ Adafruit_GPS GPS(&GPS_Serial);
 // declare pin constants
 #define chipSelect BUILTIN_SDCARD
 
+enum{GPS_STATE,SAMPLE_MISSION} state;
 
 //Declare constants
 #define GPS_DRIFT_TIME 60000             // desired duration of drift state in milliseconds
@@ -22,7 +23,7 @@ Adafruit_GPS GPS(&GPS_Serial);
 #define GPS_SEND_FREQ 50000
 
 //Declare variables
-File DCAWS_GPS;                          // Create file on the sd card to log GPS
+File gpsfile;                          // Create file on the sd card to log GPS
 bool newGPS = false;
 int goodGPSCount = 0;
 bool avgInitGPS = true;
@@ -36,11 +37,14 @@ elapsedMillis gpsTimeout;
 void setup() {
 //initialize components
   setupRadio();
+  delay(10000);
   checkRadio();
+  delay(1000);
   setupGPS();
   delay(1000);
   setupSD();
   checkSD();
+  state = GPS_STATE;
   
 }
 
@@ -51,6 +55,9 @@ elapsedMillis sinceGPS;
 
 void loop() 
 {
+ switch (state)
+ {
+  case GPS_STATE:
   if (sinceStart < GPS_DRIFT_TIME)
   {
     getGPS();
@@ -78,9 +85,14 @@ void loop()
   {
     getGPS();
     if (newGPS)
+    {
       sendGPS();
-    
-                //    state = SAMPLE_MISSION;
-                //    checkSafetySensors();
+      state = SAMPLE_MISSION;
+    }
   }
+  break;
+
+  case SAMPLE_MISSION:
+  break;
+ }
 }
