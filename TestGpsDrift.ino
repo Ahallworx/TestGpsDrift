@@ -35,8 +35,12 @@ elapsedMillis gpsTimeout;
 
 void setup() {
 //initialize components
+  setupRadio();
+  checkRadio();
   setupGPS();
+  delay(1000);
   setupSD();
+  checkSD();
   
 }
 
@@ -65,10 +69,11 @@ void loop()
       newGPS = false;
     }
   }
-                //  else if (sinceStart > GPS_DRIFT_TIME && (initGPS || (goodGPSCount < MIN_GPS_NUM)))
-                //  {
-                //      state = ABORT;
-                //  }
+  else if (sinceStart > GPS_DRIFT_TIME && (initGPS || (goodGPSCount < MIN_GPS_NUM)))
+  {
+                 //state = ABORT;
+      radio.println(F("Timed out without getting first value or too few good values."));
+  }
   else
   {
     getGPS();
